@@ -805,3 +805,126 @@ navbar .logo {
 }
 
 /*# sourceMappingURL=style.css.map */
+
+/* attendies list */
+.attendees-cont {
+  padding: 10px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.attendees-list {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.attendee-item {
+  padding: 8px 12px;
+  margin: 5px 0;
+  background: #e9ecef;
+  border-radius: 5px;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.active-tab {
+  font-weight: bold;
+  border-bottom: 3px solid #007bff;
+  cursor: pointer;
+}
+
+.active-tab:hover {
+  color: #007bff;
+}
+
+/* Raise Hand Button */
+.raise-hand {
+  background-color: white; /* Changed to white */
+  border-radius: 20px; /* Adjusted for pill shape */
+  width: 250px; /* Increased width */
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #f1c40f; /* Yellow icon for contrast */
+  font-size: 30px;
+  cursor: pointer;
+  position: relative; /* For tooltip positioning */
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  border: 2px /* Border to keep visibility */;
+ 
+}
+
+/* Hover effect */
+.raise-hand:hover {
+  background-color: #f9f9f9; /* Light gray hover effect */
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Active state (hand raised) */
+.raise-hand.raised {
+  background-color: #e74c3c; /* Red when active */
+  color: white;
+  border-color: #e74c3c;
+}
+
+/* Tooltip Styling */
+.tooltip {
+  position: relative;
+  display: inline-block;
+}
+
+.tooltip .tooltiptext {
+  visibility: hidden;
+  width: 80px;
+  background-color: black;
+  color: #fff;
+  text-align: center;
+  padding: 5px;
+  border-radius: 5px;
+
+  /* Positioning */
+  position: absolute;
+  bottom: 120%;
+  left: 50%;
+  transform: translateX(-50%);
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+/* Show tooltip on hover */
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+  opacity: 1;
+}
+
+
+/*recording*/
+.recording-indicator {
+  position: fixed;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: red;
+  color: white;
+  padding: 10px 15px;
+  border-radius: 8px;
+  font-weight: bold;
+  font-size: 18px;
+  display: none; /* Initially hidden */
+  z-index: 1000;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
+}
+
+.recording-indicator i {
+  animation: blink 1s infinite;
+}
+
+@keyframes blink {
+  50% { opacity: 0.3; }
+}

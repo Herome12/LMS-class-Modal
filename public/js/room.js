@@ -775,3 +775,427 @@ socket.on('handLowered', (username) => {
         }
     }
 });
+
+
+//attendies list 
+const attendeesTab = document.getElementById("attendies-tab");
+const chatTab = document.getElementById("chat-tab");
+const chatContainer = document.getElementById("chat-container");
+const attendeesContainer = document.getElementById("attendees-container");
+const attendeesList = document.getElementById("attendees-list");
+
+let attendees = []; // This will store the list of attendees
+
+// Toggle between Chat and Attendees
+attendeesTab.addEventListener("click", () => {
+    chatContainer.style.display = "none";
+    attendeesContainer.style.display = "block";
+    chatTab.classList.remove("active-tab");
+    attendeesTab.classList.add("active-tab");
+});
+
+chatTab.addEventListener("click", () => {
+    chatContainer.style.display = "block";
+    attendeesContainer.style.display = "none";
+    attendeesTab.classList.remove("active-tab");
+    chatTab.classList.add("active-tab");
+});
+
+// Function to update attendees list
+function updateAttendeesList() {
+    attendeesList.innerHTML = ""; // Clear existing list
+    attendees.forEach((attendee) => {
+        const li = document.createElement("li");
+        li.textContent = attendee;
+        li.classList.add("attendee-item");
+        attendeesList.appendChild(li);
+    });
+}
+
+// Simulating adding attendees (Replace this with socket event when integrating with backend)
+function addAttendee(name) {
+    if (!attendees.includes(name)) {
+        attendees.push(name);
+        updateAttendeesList();
+    }
+}
+
+// Example: Simulating new attendee joining
+setTimeout(() => addAttendee(username), 2000);
+setTimeout(() => addAttendee(username), 4000);
+
+
+//update
+
+
+const overlay = document.getElementById("overlay");
+
+const continueBtn = document.getElementById("continue-btn");
+
+
+
+
+
+// Handle Name Submission
+continueBtn.addEventListener("click", () => {
+    username = nameField.value.trim();
+    if (username) {
+        overlay.style.display = "none"; // Hide overlay
+        socket.emit("new-user", username); // Send name to the server
+    } else {
+        alert("Please enter a name!");
+    }
+});
+
+
+
+// Function to update the attendees list
+function updateAttendeesList(attendees) {
+    if (Array.isArray(attendees)) {
+        // Clear the previous list
+        attendeesList.innerHTML = "";
+
+        // Add each attendee to the list
+        attendees.forEach((attendee) => {
+            const li = document.createElement("li");
+            li.textContent = attendee;
+            li.classList.add("attendee-item");
+            attendeesList.appendChild(li);
+        });
+    } else {
+        console.error("Attendees list is not valid:", attendees);
+    }
+}
+
+// Listen for 'update-attendees' to update the list of attendees
+socket.on("update-attendees", (attendees) => {
+    updateAttendeesList(attendees);
+});
+
+// Function to add a new attendee 
+function addAttendee(attendeeName) {
+    const li = document.createElement("li");
+    li.textContent = attendeeName;
+    li.classList.add("attendee-item");
+    attendeesList.appendChild(li);
+}
+
+// Example usage (when user joins)
+socket.on("new-attendee", (attendeeName) => {
+    addAttendee(attendeeName);
+});
+
+
+// //recording 
+// let mediaRecorder;
+// let recordedChunks = [];
+// let combinedStream;
+// let isRecording = false;
+
+// const startRecordingBtn = document.getElementById("start-recording-btn");
+// const stopRecordingBtn = document.getElementById("stop-recording-btn");
+// const screenShareBtn = document.querySelector('.screenshare');
+// const whiteboardCanvas = document.getElementById('whiteboard');
+
+// // Function to start recording the stream (Camera + Audio only)
+// async function startRecording() {
+//   // Grab the media stream for the camera and microphone
+//   const videoStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+
+//   // Create a new stream that will contain the camera and audio
+//   combinedStream = new MediaStream();
+
+//   // Add the video and audio tracks to the combined stream
+//   videoStream.getTracks().forEach(track => combinedStream.addTrack(track));
+
+//   // Create a media recorder to record the combined stream
+//   mediaRecorder = new MediaRecorder(combinedStream);
+
+//   // Store the recorded data as chunks
+//   mediaRecorder.ondataavailable = (event) => {
+//     recordedChunks.push(event.data);
+//   };
+
+//   // When the recording stops, create a Blob from the chunks and generate a URL
+//   mediaRecorder.onstop = () => {
+//     const recordedBlob = new Blob(recordedChunks, { type: 'video/webm' });
+//     const recordedURL = URL.createObjectURL(recordedBlob);
+
+//     // Create a video element to play the recorded content
+//     const recordedVideo = document.createElement('video');
+//     recordedVideo.src = recordedURL;
+//     recordedVideo.controls = true;
+//     document.body.appendChild(recordedVideo);
+
+//     // Create a download link for the recording
+//     const downloadLink = document.createElement('a');
+//     downloadLink.href = recordedURL;
+//     downloadLink.download = 'meeting-recording.webm';
+//     downloadLink.innerText = 'Download Recording';
+//     document.body.appendChild(downloadLink);
+
+//     console.log("Recording stopped and saved!");
+//   };
+
+//   // Start the recording
+//   mediaRecorder.start();
+//   console.log("Recording started...");
+//   isRecording = true;
+
+//   // Disable start button and enable stop button
+//   startRecordingBtn.disabled = true;
+//   stopRecordingBtn.disabled = false;
+// }
+
+// // Function to stop recording the stream
+// function stopRecording() {
+//   if (mediaRecorder) {
+//     mediaRecorder.stop();
+//     isRecording = false;
+
+//     // Disable stop button and enable start button
+//     startRecordingBtn.disabled = false;
+//     stopRecordingBtn.disabled = true;
+//   }
+// }
+
+// // Function to handle screen share toggle (only triggered when the user clicks the button)
+// screenShareBtn.addEventListener('click', async () => {
+//   if (isRecording) {
+//     // Stop the screen share stream
+//     const tracks = combinedStream.getVideoTracks();
+//     tracks.forEach(track => track.stop());
+
+//     // Restart the screen sharing
+//     const screenStream = await navigator.mediaDevices.getDisplayMedia({ video: true });
+//     screenStream.getTracks().forEach(track => combinedStream.addTrack(track));
+
+//     console.log("Screen sharing started");
+//   } else {
+//     alert("Recording must be started before screen sharing.");
+//   }
+// });
+
+// // Event listeners for starting and stopping the recording
+// startRecordingBtn.addEventListener('click', startRecording);
+// stopRecordingBtn.addEventListener('click', stopRecording);
+
+// // Initialize whiteboard functionality (as before)
+// function handleWhiteboardDrawing(event) {
+//   const ctx = whiteboardCanvas.getContext('2d');
+//   let drawing = false;
+//   let lastX, lastY;
+
+//   whiteboardCanvas.addEventListener('mousedown', (e) => {
+//     drawing = true;
+//     lastX = e.offsetX;
+//     lastY = e.offsetY;
+//   });
+
+//   whiteboardCanvas.addEventListener('mousemove', (e) => {
+//     if (!drawing) return;
+//     ctx.beginPath();
+//     ctx.moveTo(lastX, lastY);
+//     ctx.lineTo(e.offsetX, e.offsetY);
+//     ctx.stroke();
+//     lastX = e.offsetX;
+//     lastY = e.offsetY;
+//   });
+
+//   whiteboardCanvas.addEventListener('mouseup', () => {
+//     drawing = false;
+//   });
+
+//   whiteboardCanvas.addEventListener('mouseout', () => {
+//     drawing = false;
+//   });
+// }
+
+// // Initialize whiteboard drawing event
+// handleWhiteboardDrawing();
+
+let mediaRecorder;
+let recordedChunks = [];
+let isRecording = false;
+let screenStream;
+let audioStream;
+let combinedStream;
+let videoElement = document.createElement('video');
+let startRecordingBtn = document.getElementById("start-recording-btn");
+let stopRecordingBtn = document.getElementById("stop-recording-btn");
+
+async function startRecording() {
+    try {
+        // Request screen media (entire screen or a specific window/tab)
+        screenStream = await navigator.mediaDevices.getDisplayMedia({
+            video: true,
+            audio: true // Capture system audio if available
+        });
+
+        // Get the audio stream (microphone, if needed)
+        audioStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+
+        // Combine both screen stream and audio stream
+        combinedStream = new MediaStream();
+        screenStream.getTracks().forEach(track => combinedStream.addTrack(track));
+        audioStream.getTracks().forEach(track => combinedStream.addTrack(track));
+
+        // Create MediaRecorder to start recording the combined stream
+        mediaRecorder = new MediaRecorder(combinedStream);
+
+        mediaRecorder.ondataavailable = (event) => {
+            recordedChunks.push(event.data);
+        };
+
+        mediaRecorder.onstop = () => {
+            const recordedBlob = new Blob(recordedChunks, { type: 'video/webm' });
+            const recordedURL = URL.createObjectURL(recordedBlob);
+
+            // Create a video element to play back the recording
+            videoElement.src = recordedURL;
+            videoElement.controls = true;
+            document.body.appendChild(videoElement);
+
+            // Create a download link for the recording
+            const downloadLink = document.createElement('a');
+            downloadLink.href = recordedURL;
+            downloadLink.download = 'screen-recording.webm';
+            downloadLink.innerText = 'Download Recording';
+            document.body.appendChild(downloadLink);
+
+            console.log("Recording stopped and saved!");
+        };
+
+        // Start recording
+        mediaRecorder.start();
+        console.log("Recording started...");
+
+        // Disable start button and enable stop button
+        startRecordingBtn.disabled = true;
+        stopRecordingBtn.disabled = false;
+
+        isRecording = true;
+    } catch (error) {
+        console.error("Error starting screen recording: ", error);
+        alert("Unable to start recording. Please check browser permissions.");
+    }
+}
+
+// Stop recording
+function stopRecording() {
+    if (mediaRecorder) {
+        mediaRecorder.stop();
+        isRecording = false;
+
+        // Stop all tracks of the combined stream
+        combinedStream.getTracks().forEach(track => track.stop());
+
+        // Disable stop button and enable start button
+        startRecordingBtn.disabled = false;
+        stopRecordingBtn.disabled = true;
+
+        console.log("Recording stopped.");
+    }
+}
+
+// Event listeners for start and stop buttons
+startRecordingBtn.addEventListener('click', startRecording);
+stopRecordingBtn.addEventListener('click', stopRecording);
+
+
+//audio
+// HTML Elements
+
+const screenElement = document.createElement("video"); // Element to play screen video
+const audioElement = document.createElement("audio"); // Element to play audio
+let screenRecorder, audioRecorder;
+let screenChunks = [], audioChunks = [];
+let screenBlob, audioBlob;
+
+
+// Function to start recording both screen and audio
+async function startRecording() {
+    try {
+        // Request access to the user's microphone (audio) and screen (video)
+        const audioStreamPromise = navigator.mediaDevices.getUserMedia({ audio: true });
+        const screenStreamPromise = navigator.mediaDevices.getDisplayMedia({ video: true });
+
+        // Wait for both streams to be captured
+        [audioStream, screenStream] = await Promise.all([audioStreamPromise, screenStreamPromise]);
+
+        // Create media recorders for both screen and audio streams
+        screenRecorder = new MediaRecorder(screenStream);
+        audioRecorder = new MediaRecorder(audioStream);
+
+        // Push data to chunks when available
+        screenRecorder.ondataavailable = (event) => {
+            screenChunks.push(event.data);
+        };
+
+        audioRecorder.ondataavailable = (event) => {
+            audioChunks.push(event.data);
+        };
+
+        // When screen recording stops, create a Blob and provide it for playback or download
+        screenRecorder.onstop = () => {
+            screenBlob = new Blob(screenChunks, { type: 'video/webm' });
+            const screenUrl = URL.createObjectURL(screenBlob);
+            screenElement.src = screenUrl; // Attach the screen video to the element for playback
+            screenElement.controls = true; // Show controls for the screen element
+            document.body.appendChild(screenElement); // Append the screen video to the page
+
+            // Download link for screen recording
+            const downloadLink = document.createElement("a");
+            downloadLink.href = screenUrl;
+            downloadLink.download = "screen_recording.webm";
+            downloadLink.textContent = "Download Screen Recording";
+            document.body.appendChild(downloadLink);
+        };
+
+        // When audio recording stops, create a Blob and provide it for playback or download
+        audioRecorder.onstop = () => {
+            audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+            const audioUrl = URL.createObjectURL(audioBlob);
+            audioElement.src = audioUrl; // Attach the audio to the element for playback
+            audioElement.controls = true; // Show controls for the audio element
+            document.body.appendChild(audioElement); // Append the audio element to the page
+
+            // Download link for audio recording
+            const downloadLink = document.createElement("a");
+            downloadLink.href = audioUrl;
+            downloadLink.download = "audio_recording.webm";
+            downloadLink.textContent = "Download Audio Recording";
+            document.body.appendChild(downloadLink);
+        };
+
+        // Start both recorders
+        screenRecorder.start();
+        audioRecorder.start();
+        console.log("Recording started...");
+
+        // Disable the start button while recording
+        startRecordingBtn.disabled = true;
+        stopRecordingBtn.disabled = false;
+    } catch (err) {
+        console.error("Error accessing the microphone or screen", err);
+    }
+}
+
+// Function to stop recording
+function stopRecording() {
+    screenRecorder.stop(); // Stop screen recording
+    audioRecorder.stop(); // Stop audio recording
+    console.log("Recording stopped...");
+
+    // Enable the start button again and disable the stop button
+    startRecordingBtn.disabled = false;
+    stopRecordingBtn.disabled = true;
+
+    // Stop all streams (audio and video) to release the resources
+    screenStream.getTracks().forEach(track => track.stop());
+    audioStream.getTracks().forEach(track => track.stop());
+}
+
+// Attach event listeners to the buttons
+startRecordingBtn.addEventListener("click", startRecording);
+stopRecordingBtn.addEventListener("click", stopRecording);

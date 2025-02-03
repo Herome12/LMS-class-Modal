@@ -18,11 +18,12 @@
     <div class="overlay" id="overlay">
         <div class="box">
             <div class="head-name">Enter a Name</div>
-            <input type="text" class="name-field" placeholder="Type here.." id="name-field"></input><br>
-            <button class="continue-name">Continue</button>
-
+            <input type="text" class="name-field" placeholder="Type here.." id="name-field">
+            <br>
+            <button class="continue-name" id="continue-btn">Continue</button>
         </div>
     </div>
+    
     <div class="container-room">
         <div class="left-cont">
 
@@ -35,6 +36,8 @@
                     <div class="video-off" id="myvideooff">Video Off</div>
                 </div>
             </div>
+
+           
 
             <div class="whiteboard-cont"><canvas id="whiteboard" height="1000" width="1000"></canvas>
                 <div class="colors-cont">
@@ -78,6 +81,11 @@
                         <i class="fas fa-hand-paper"></i>
                         <span class="tooltiptext">Raise Hand</span>
                     </div>
+
+                    <button id="start-recording-btn">Start Recording</button>
+                    <button id="stop-recording-btn" disabled>Stop Recording</button>
+                    
+
                 
 
 
@@ -87,26 +95,36 @@
                     <button class="copycode-button" onclick="CopyClassText()">Copy Code</button>
                 </div>
             </div>
+           
+           
+              
+                
+                
+            
 
 
         </div>
 
         <!-- Right container (Attendees and Chats) -->
-<div class="right-cont">
-    <div class="head-title">
-        <div class="chats"><i class="fas fa-comment-alt mr-1"></i>Chats</div>
-        <div class="attendies"><i class="fas fa-users mr-1"></i>Attendies</div>
-    </div>
+        <div class="right-cont">
+            <div class="head-title">
+                <div class="chats active-tab" id="chat-tab"><i class="fas fa-comment-alt mr-1"></i>Chats</div>
+                <div class="attendies" id="attendies-tab"><i class="fas fa-users mr-1"></i>Attendees</div>
+            </div>
+        
+            <div class="chat-cont" id="chat-container"></div>
+            <div class="attendees-cont" id="attendees-container" style="display: none;">
+                <ul class="attendees-list" id="attendees-list"></ul>
+            </div>
+        
+            <div class="chat-input-cont">
+                <div class="ci-cont"><input type="text" class="chat-input" placeholder="Type chat here.."></div>
+                <div class="ci-send"><button class="chat-send">Send</button></div>
+            </div>
+        </div>
 
-    <div class="chat-cont"></div>
-    <div class="chat-input-cont">
-        <div class="ci-cont"><input type="text" class="chat-input" placeholder="Type chat here.."></div>
-        <div class="ci-send"><button class="chat-send">Send</button></div>
-    </div>
-
-    <!-- Attendees List (dynamically updated) -->
-    <div class="attendees-list" id="attendees-list"></div>
-</div>
+        
+        
 
     </div>
     <script src="/socket.io/socket.io.js"></script>
